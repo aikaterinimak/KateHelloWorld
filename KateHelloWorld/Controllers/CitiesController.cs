@@ -9,6 +9,8 @@ using KateHelloWorld.Models;
 using KateHelloWorldHelperLib.Models.Data;
 using KateHelloWorldHelperLib.Models.Responses;
 using Newtonsoft.Json.Linq;
+using KateHelloWorldHelperLib.Helpers.AppStrings;
+using System.Text.RegularExpressions;
 
 namespace KateHelloWorld.Controllers
 {
@@ -57,7 +59,7 @@ namespace KateHelloWorld.Controllers
             }
             catch
             {
-                return BadRequest(String.Format("CityId {0} is not a valid Guid.", cityid));
+                return BadRequest(String.Format(ErrorMessageResources.errorMngr.GetString("ErrorInvalidCityId"), cityid));
             }
 
             try
@@ -66,7 +68,7 @@ namespace KateHelloWorld.Controllers
             }
             catch
             {
-                return BadRequest(String.Format("UserId {0} is not a valid Guid.", userid));
+                return BadRequest(String.Format(ErrorMessageResources.errorMngr.GetString("ErrorInvalidUserId"), userid));
             }
 
             getUserGreetingsResponse greetingResponse = new getUserGreetingsResponse();
@@ -100,7 +102,7 @@ namespace KateHelloWorld.Controllers
             }
             catch
             {
-                return BadRequest(String.Format("CityId {0} is not a valid Guid.", cityid));
+                return BadRequest(String.Format(ErrorMessageResources.errorMngr.GetString("ErrorInvalidCityId"), cityid));
             }
 
             try
@@ -109,19 +111,25 @@ namespace KateHelloWorld.Controllers
             }
             catch
             {
-                return BadRequest(String.Format("UserId {0} is not a valid Guid.", userid));
+                return BadRequest(String.Format(ErrorMessageResources.errorMngr.GetString("ErrorInvalidUserId"), userid));
             }
 
             string greetingPassed = (string)greeting["greeting"];
 
             if(String.IsNullOrWhiteSpace(greetingPassed))
             {
-                return BadRequest("Greeting cannot be blank.");
+                return BadRequest(ErrorMessageResources.errorMngr.GetString("ErrorBlankGreeting"));
             }
 
             if (greetingPassed.Length > 100 || greetingPassed.Length < 5)
             {
-                return BadRequest("Greeting must be between 5 and 100 characters.");
+                return BadRequest(ErrorMessageResources.errorMngr.GetString("ErrorGreetingLength"));
+            }
+
+            Regex r = new Regex("^[a-zA-Z0-9 .!?]*$");
+            if (!r.IsMatch(greetingPassed))
+            {
+                return BadRequest(ErrorMessageResources.errorMngr.GetString("ErrorGreetingInvalidChars"));
             }
 
             HelloCity newGreeting = new HelloCity();
@@ -156,7 +164,7 @@ namespace KateHelloWorld.Controllers
             }
             catch
             {
-                return BadRequest(String.Format("CityId {0} is not a valid Guid.", cityid));
+                return BadRequest(String.Format(ErrorMessageResources.errorMngr.GetString("ErrorInvalidCityId"), cityid));
             }
 
             try
@@ -165,7 +173,7 @@ namespace KateHelloWorld.Controllers
             }
             catch
             {
-                return BadRequest(String.Format("UserId {0} is not a valid Guid.", userid));
+                return BadRequest(String.Format(ErrorMessageResources.errorMngr.GetString("ErrorInvalidUserId"), userid));
             }
 
             getRatingForCity ratingResponse = new getRatingForCity();
@@ -198,7 +206,7 @@ namespace KateHelloWorld.Controllers
             }
             catch
             {
-                return BadRequest(String.Format("CityId {0} is not a valid Guid.", cityid));
+                return BadRequest(String.Format(ErrorMessageResources.errorMngr.GetString("ErrorInvalidCityId"), cityid));
             }
 
             try
@@ -207,7 +215,7 @@ namespace KateHelloWorld.Controllers
             }
             catch
             {
-                return BadRequest(String.Format("UserId {0} is not a valid Guid.", userid));
+                return BadRequest(String.Format(ErrorMessageResources.errorMngr.GetString("ErrorInvalidUserId"), userid));
             }
 
             string ratingString = (string)rating["rating"];
@@ -215,17 +223,17 @@ namespace KateHelloWorld.Controllers
 
             if (String.IsNullOrWhiteSpace(ratingString))
             {
-                return BadRequest("Rating cannot be blank.");
+                return BadRequest(ErrorMessageResources.errorMngr.GetString("ErrorBlankRating"));
             }
 
             if (!Single.TryParse(ratingString, out ratingPassed))
             {
-                return BadRequest("Rating must be a number.");
+                return BadRequest(ErrorMessageResources.errorMngr.GetString("ErrorRatingNumberic"));
             }
             
             if (ratingPassed < 1 || ratingPassed > 5)
             {
-                return BadRequest("Rating must be between 1 and 5.");
+                return BadRequest(ErrorMessageResources.errorMngr.GetString("ErrorRatingRange"));
             }
 
             RateCity updateRating = db.RateCities.Where(e => e.CityId == cityIDGuid && e.UserId == userIDGuid).FirstOrDefault();

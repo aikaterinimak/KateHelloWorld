@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
 using KateHelloWorld.Models;
 using KateHelloWorldHelperLib.Models.Responses;
+using KateHelloWorldHelperLib.Helpers.AppStrings;
 using System.Text.RegularExpressions;
 
 namespace KateHelloWorld.Controllers
@@ -18,7 +13,7 @@ namespace KateHelloWorld.Controllers
     public class UsersController : ApiController
     {
         private KateHelloWorldEntities db = new KateHelloWorldEntities();
-
+        
         // GET Guid associated with displayname, if exists
         //     Guid gets created if displayname does not exist
         [Route("api/users/{displayname}/")]
@@ -37,12 +32,12 @@ namespace KateHelloWorld.Controllers
                 Regex r = new Regex("^[a-zA-Z0-9]*$");
                 if (!r.IsMatch(displayname))
                 {
-                    return BadRequest("Display name must be alphanumeric.");
+                    return BadRequest(ErrorMessageResources.errorMngr.GetString("ErrorAlphanumericDisplayName"));
                 }
 
                 if(displayname.Length < 5 || displayname.Length > 15)
                 {
-                    return BadRequest("Display name must be between 5 and 15 characters.");
+                    return BadRequest(ErrorMessageResources.errorMngr.GetString("ErrorDisplayNameConstraint"));
                 }
 
                 Guid newUserGuid = Guid.NewGuid();

@@ -7,6 +7,8 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.Net.Http.Headers;
+using KateHelloWorldHelperLib.Helpers.AppStrings;
 
 namespace KateHelloWorldHelperLib
 {
@@ -16,9 +18,10 @@ namespace KateHelloWorldHelperLib
             : base(aUriForBaseAddress, innerHandler, handlers)
         {
             DefaultRequestHeaders.Authorization = null;
+            DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             UriForBaseAddress = aUriForBaseAddress;
         }
-
+                
         public async Task<IList<CityDto>> getCityListAsync(CancellationToken aCancelationToken = default(CancellationToken))
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "cities/");
@@ -28,6 +31,17 @@ namespace KateHelloWorldHelperLib
 
         public async Task<IList<string>> getUserGreetingsForCity(string aUserId, string aCityId, CancellationToken aCancellationToken = default(CancellationToken))
         {
+            Guid guidOutput;
+            if (!Guid.TryParse(aUserId, out guidOutput))
+            {
+                throw new ArgumentException(String.Format(ErrorMessageResources.errorMngr.GetString("ErrorInvalidUserId"), aUserId));
+            }
+
+            if (!Guid.TryParse(aCityId, out guidOutput))
+            {
+                throw new ArgumentException(String.Format(ErrorMessageResources.errorMngr.GetString("ErrorInvalidCityId"), aCityId));
+            }
+
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "cities/" + aCityId + "/users/" + aUserId + "/greetings");
             getUserGreetingsResponse response = await SendAndReadAsAsync<getUserGreetingsResponse>(request, aCancellationToken);
             return response?.greetings;
@@ -35,6 +49,27 @@ namespace KateHelloWorldHelperLib
 
         public async Task<string> postUserGreetingForCity(string aUserId, string aCityId, string aGreeting, CancellationToken aCancellationToken = default(CancellationToken))
         {
+            Guid guidOutput;
+            if (!Guid.TryParse(aUserId, out guidOutput))
+            {
+                throw new ArgumentException(String.Format(ErrorMessageResources.errorMngr.GetString("ErrorInvalidUserId"), aUserId));
+            }
+
+            if (!Guid.TryParse(aCityId, out guidOutput))
+            {
+                throw new ArgumentException(String.Format(ErrorMessageResources.errorMngr.GetString("ErrorInvalidCityId"), aCityId));
+            }
+
+            if (String.IsNullOrWhiteSpace(aGreeting))
+            {
+                throw new ArgumentException(ErrorMessageResources.errorMngr.GetString("ErrorBlankGreeting"));
+            }
+
+            if (aGreeting.Length < 5 || aGreeting.Length > 100)
+            {
+                throw new ArgumentException(ErrorMessageResources.errorMngr.GetString("ErrorGreetingLength"));
+            }
+
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "cities/" + aCityId + "/users/" + aUserId + "/greetings");
             postUserGreetingRequest greetingRequest = new postUserGreetingRequest(aGreeting);
 
@@ -44,6 +79,17 @@ namespace KateHelloWorldHelperLib
 
         public async Task<float> getUserRatingForCity(string aUserId, string aCityId, CancellationToken aCancellationToken = default(CancellationToken))
         {
+            Guid guidOutput;
+            if (!Guid.TryParse(aUserId, out guidOutput))
+            {
+                throw new ArgumentException(String.Format(ErrorMessageResources.errorMngr.GetString("ErrorInvalidUserId"), aUserId));
+            }
+
+            if (!Guid.TryParse(aCityId, out guidOutput))
+            {
+                throw new ArgumentException(String.Format(ErrorMessageResources.errorMngr.GetString("ErrorInvalidCityId"), aCityId));
+            }
+
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "cities/" + aCityId + "/users/" + aUserId + "/ratings");
             getRatingForCity response = await SendAndReadAsAsync<getRatingForCity>(request, aCancellationToken);
             return response.rating;
@@ -51,11 +97,34 @@ namespace KateHelloWorldHelperLib
         
         public async Task<string> postUserRatingForCity(string aUserId, string aCityId, float aRating, CancellationToken aCancellationToken = default(CancellationToken))
         {
+            Guid guidOutput;
+            if (!Guid.TryParse(aUserId, out guidOutput))
+            {
+                throw new ArgumentException(String.Format(ErrorMessageResources.errorMngr.GetString("ErrorInvalidUserId"), aUserId));
+            }
+
+            if (!Guid.TryParse(aCityId, out guidOutput))
+            {
+                throw new ArgumentException(String.Format(ErrorMessageResources.errorMngr.GetString("ErrorInvalidCityId"), aCityId));
+            }
+
+            if (aRating < 1 || aRating > 5)
+            {
+                throw new ArgumentException(ErrorMessageResources.errorMngr.GetString("ErrorRatingRange"));
+            }
+
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "cities/" + aCityId + "/users/" + aUserId + "/ratings");
             postUserRatingRequest ratingRequest = new postUserRatingRequest(aRating);
 
             request.Content = new StringContent(JsonConvert.SerializeObject(ratingRequest), System.Text.Encoding.UTF8, "application/json");
             return await sendRequestAndReadAsStringAsync(request, aCancellationToken);
+        }
+
+        public async Task<Guid> getUserId(string aDisplayName, CancellationToken aCancellationToken = default(CancellationToken))
+        {
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "users/" + aDisplayName);
+            getUserGuidResponse response = await SendAndReadAsAsync<getUserGuidResponse>(request, aCancellationToken);
+            return response.UserId;
         }
     }
 }

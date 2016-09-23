@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
@@ -55,13 +58,33 @@ namespace KateHelloWorldHelperLib
         protected async Task<string> sendRequestAndReadAsStringAsync(HttpRequestMessage aRequest, CancellationToken aCancellationToken = default(CancellationToken))
         {
             HttpResponseMessage response = await _client.SendAsync(aRequest, aCancellationToken).ConfigureAwait(false);
-            return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            }
+            else
+            {
+                string message = (string)JObject.Parse(response.Content.ReadAsStringAsync().Result)["Message"];
+                string exceptionMessage = (string)JObject.Parse(response.Content.ReadAsStringAsync().Result)["ExceptionMessage"];
+                throw new WebException((message + " " + exceptionMessage).Trim());
+            }
         }
 
         protected async Task<T> SendAndReadAsAsync<T>(HttpRequestMessage aRequest, CancellationToken aCancellationToken = default(CancellationToken))
         {
             HttpResponseMessage response = await _client.SendAsync(aRequest, aCancellationToken).ConfigureAwait(false);
-            return await response.Content.ReadAsAsync<T>().ConfigureAwait(false);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return await response.Content.ReadAsAsync<T>().ConfigureAwait(false);
+            }
+            else
+            {
+                string message = (string)JObject.Parse(response.Content.ReadAsStringAsync().Result)["Message"];
+                string exceptionMessage = (string)JObject.Parse(response.Content.ReadAsStringAsync().Result)["ExceptionMessage"];
+                throw new WebException((message + " " + exceptionMessage).Trim());
+            }
         }
     }
 }
