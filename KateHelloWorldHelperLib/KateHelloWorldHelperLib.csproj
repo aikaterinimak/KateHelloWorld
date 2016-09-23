@@ -59,6 +59,7 @@
     <Compile Include="Models\Responses\getCitiesResponse.cs" />
     <Compile Include="Models\Responses\getRatingForCity.cs" />
     <Compile Include="Models\Responses\getUserGreetingsResponse.cs" />
+    <Compile Include="Models\Responses\getUserGuidResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -2,15 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
 using KateHelloWorld.Models;
-using Newtonsoft.Json;
 using KateHelloWorldHelperLib.Models.Data;
 using KateHelloWorldHelperLib.Models.Responses;
 using Newtonsoft.Json.Linq;
@@ -189,8 +184,10 @@ namespace KateHelloWorld.Controllers
         }
 
         // POST to create a rating for a user for a city
+        // PUT to create a rating for a user for a city
         [Route("api/cities/{cityid}/users/{userid}/ratings")]
         [HttpPost]
+        [HttpPut]
         public async Task<IHttpActionResult> PostRating(string cityid, string userid, [FromBody]JObject rating)
         {
             Guid cityIDGuid, userIDGuid;
@@ -231,26 +228,34 @@ namespace KateHelloWorld.Controllers
                 return BadRequest("Rating must be between 1 and 5.");
             }
 
-            if (RatingExists(cityIDGuid, userIDGuid))
-            {
-                return BadRequest("You have already rated this city.");
-            }
+            RateCity updateRating = db.RateCities.Where(e => e.CityId == cityIDGuid && e.UserId == userIDGuid).FirstOrDefault();
 
-            RateCity newRating = new RateCity();
-            newRating.CityId = cityIDGuid;
-            newRating.UserId = userIDGuid;
-            newRating.Rating = ratingPassed;
-
-            try
+            if (updateRating != null)
             {
-                db.RateCities.Add(newRating);
+                updateRating.Rating = ratingPassed;
+
+                // Mark entity as modified and save
+                db.Entry(updateRating).State = EntityState.Modified;
                 await db.SaveChangesAsync();
             }
-            catch (Exception ex)
+            else
             {
-                return InternalServerError(ex);
-            }
+                RateCity newRating = new RateCity();
+                newRating.CityId = cityIDGuid;
+                newRating.UserId = userIDGuid;
+                newRating.Rating = ratingPassed;
 
+                try
+                {
+                    db.RateCities.Add(newRating);
+                    await db.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    return InternalServerError(ex);
+                }
+            }
+            
             return Ok();
         }
 
@@ -261,12 +266,6 @@ namespace KateHelloWorld.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        //Check to see if the user has already rated the city
-        private bool RatingExists(Guid cityid, Guid userid)
-        {
-            return db.RateCities.Count(e => e.CityId == cityid && e.UserId == userid) > 0;
         }
     }
 }
