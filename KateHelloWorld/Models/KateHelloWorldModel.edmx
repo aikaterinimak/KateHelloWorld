@@ -19,12 +19,12 @@
           <Key>
             <PropertyRef Name="UserId" />
             <PropertyRef Name="CityId" />
-            <PropertyRef Name="GreetingTimestamp" />
+            <PropertyRef Name="GreetingDateTime" />
           </Key>
           <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="CityId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Greeting" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="GreetingTimestamp" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="GreetingDateTime" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="RateCity">
           <Key>
@@ -132,14 +132,14 @@
           <Key>
             <PropertyRef Name="UserId" />
             <PropertyRef Name="CityId" />
-            <PropertyRef Name="GreetingTimestamp" />
+            <PropertyRef Name="GreetingDateTime" />
           </Key>
           <Property Name="UserId" Type="Guid" Nullable="false" />
           <Property Name="CityId" Type="Guid" Nullable="false" />
           <Property Name="Greeting" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="City" Relationship="Self.FK_HelloCity_City" FromRole="HelloCity" ToRole="City" />
           <NavigationProperty Name="User" Relationship="Self.FK_HelloCity_User" FromRole="HelloCity" ToRole="User" />
-          <Property Name="GreetingTimestamp" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="GreetingDateTime" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
         <EntityType Name="RateCity">
           <Key>
@@ -251,7 +251,7 @@
           <EntitySetMapping Name="HelloCities">
             <EntityTypeMapping TypeName="KateHelloWorldModel.HelloCity">
               <MappingFragment StoreEntitySet="HelloCity">
-                <ScalarProperty Name="GreetingTimestamp" ColumnName="GreetingTimestamp" />
+                <ScalarProperty Name="GreetingDateTime" ColumnName="GreetingDateTime" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="CityId" ColumnName="CityId" />
                 <ScalarProperty Name="Greeting" ColumnName="Greeting" />

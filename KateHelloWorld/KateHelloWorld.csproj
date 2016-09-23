@@ -159,12 +159,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\KateHelloWorldHelperLib\KateHelloWorldHelperLib.csproj">
-      <Project>{8eb5de98-3c3e-418d-808f-daf571a97b6f}</Project>
-      <Name>KateHelloWorldHelperLib</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -317,6 +311,12 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\KateHelloWorldHelperLib\KateHelloWorldHelperLib.csproj">
+      <Project>{8eb5de98-3c3e-418d-808f-daf571a97b6f}</Project>
+      <Name>KateHelloWorldHelperLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

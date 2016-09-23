@@ -17,7 +17,7 @@ namespace KateHelloWorld.Models
         public System.Guid UserId { get; set; }
         public System.Guid CityId { get; set; }
         public string Greeting { get; set; }
-        public byte[] GreetingTimestamp { get; set; }
+        public System.DateTime GreetingDateTime { get; set; }
     
         public virtual City City { get; set; }
         public virtual User User { get; set; }
