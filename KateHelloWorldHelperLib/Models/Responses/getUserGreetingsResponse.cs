@@ -8,6 +8,6 @@ namespace KateHelloWorldHelperLib.Models.Responses
 {
     public class getUserGreetingsResponse
     {
-        public List<string> greetings { get; set; }
+        public IList<string> greetings { get; set; }
     }
 }

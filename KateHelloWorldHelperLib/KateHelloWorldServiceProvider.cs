@@ -19,14 +19,14 @@ namespace KateHelloWorldHelperLib
             UriForBaseAddress = aUriForBaseAddress;
         }
 
-        public async Task<List<CityDto>> getCityListAsync(CancellationToken aCancelationToken = default(CancellationToken))
+        public async Task<IList<CityDto>> getCityListAsync(CancellationToken aCancelationToken = default(CancellationToken))
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "cities/");
             getCitiesResponse cityList = await SendAndReadAsAsync<getCitiesResponse>(request, aCancelationToken);
             return cityList?.cities;
         }
 
-        public async Task<List<string>> getUserGreetingsForCity(string aUserId, string aCityId, CancellationToken aCancellationToken = default(CancellationToken))
+        public async Task<IList<string>> getUserGreetingsForCity(string aUserId, string aCityId, CancellationToken aCancellationToken = default(CancellationToken))
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "cities/" + aCityId + "/users/" + aUserId + "/greetings");
             getUserGreetingsResponse response = await SendAndReadAsAsync<getUserGreetingsResponse>(request, aCancellationToken);
@@ -48,14 +48,7 @@ namespace KateHelloWorldHelperLib
             getRatingForCity response = await SendAndReadAsAsync<getRatingForCity>(request, aCancellationToken);
             return response.rating;
         }
-
-        public async Task<float> getOverallRatingForCity(string aCityId, CancellationToken aCancellationToken = default(CancellationToken))
-        {
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "cities/" + aCityId + "/ratings");
-            getRatingForCity response = await SendAndReadAsAsync<getRatingForCity>(request, aCancellationToken);
-            return response.rating;
-        }
-
+        
         public async Task<string> postUserRatingForCity(string aUserId, string aCityId, float aRating, CancellationToken aCancellationToken = default(CancellationToken))
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "cities/" + aCityId + "/users/" + aUserId + "/ratings");

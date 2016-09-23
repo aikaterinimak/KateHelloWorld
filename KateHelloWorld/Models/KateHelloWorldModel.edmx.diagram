@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="57962b25951b4ae9b2e3e79f2a9f3d6a" Name="Diagram1">
+        <EntityTypeShape EntityType="KateHelloWorldModel.City" Width="1.5" PointX="4.5" PointY="1.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="KateHelloWorldModel.HelloCity" Width="1.5" PointX="2.5" PointY="2.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="KateHelloWorldModel.RateCity" Width="1.5" PointX="2.5" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="KateHelloWorldModel.User" Width="1.5" PointX="0.5" PointY="1.75" IsExpanded="true" />
+        <AssociationConnector Association="KateHelloWorldModel.FK_HelloCity_City" ManuallyRouted="false" />
+        <AssociationConnector Association="KateHelloWorldModel.FK_RateCity_City" ManuallyRouted="false" />
+        <AssociationConnector Association="KateHelloWorldModel.FK_HelloCity_User" ManuallyRouted="false" />
+        <AssociationConnector Association="KateHelloWorldModel.FK_RateCity_User" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

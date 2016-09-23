@@ -9,6 +9,6 @@ namespace KateHelloWorldHelperLib.Models.Responses
 {
     public class getCitiesResponse
     {
-        public List<CityDto> cities { get; set; }
+        public IList<CityDto> cities { get; set; }
     }
 }

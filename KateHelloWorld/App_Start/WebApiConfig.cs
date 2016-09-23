@@ -15,6 +15,12 @@ namespace KateHelloWorld
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
+                "GetGreetings",
+                "api/{controller}/{cityid}/users/{userid}/greetings",
+                new { controller = "Cities", action = "GetGreetings", cityid = "", userid = "" }
+                );
+
+            config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
