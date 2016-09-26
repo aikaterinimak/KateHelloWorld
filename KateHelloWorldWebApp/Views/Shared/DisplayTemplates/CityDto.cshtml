@@ -1,0 +1,30 @@
+﻿@model KateHelloWorldHelperLib.Models.Data.CityDto
+
+<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+    <div class="thumbnail">
+        <img src="@Model.CityImgUri" alt="@Model.CityName">
+        <div class="caption">
+            <h3>@Model.CityName</h3>
+            <p>
+                @Model.CityCountry
+            </p>
+            <fieldset class="rating">
+                <input type="radio" id="star5-@Model.CityId" name="rating-@Model.CityId" value="5"onclick="ratingClick(this);" /><label class="full" for="star5" title="Awesome! 5 stars"></label>
+                <input type="radio" id="star4half-@Model.CityId" name="rating-@Model.CityId" value="4.5"onclick="ratingClick(this);" /><label class="half" for="star4half" title="Pretty good! 4.5 stars"></label>
+                <input type="radio" id="star4-@Model.CityId" name="rating-@Model.CityId" value="4"onclick="ratingClick(this);" /><label class="full" for="star4" title="Pretty good! 4 stars"></label>
+                <input type="radio" id="star3half-@Model.CityId" name="rating-@Model.CityId" value="3.5"onclick="ratingClick(this);" /><label class="half" for="star3half" title="Good! 3.5 stars"></label>
+                <input type="radio" id="star3-@Model.CityId" name="rating-@Model.CityId" value="3"onclick="ratingClick(this);" /><label class="full" for="star3" title="Good! 3 stars"></label>
+                <input type="radio" id="star2half-@Model.CityId" name="rating-@Model.CityId" value="2.5"onclick="ratingClick(this);" /><label class="half" for="star2half" title="Kinda bad. 2.5 stars"></label>
+                <input type="radio" id="star2-@Model.CityId" name="rating-@Model.CityId" value="2"onclick="ratingClick(this);" /><label class="full" for="star2" title="Kinda bad. 2 stars"></label>
+                <input type="radio" id="star1half-@Model.CityId" name="rating-@Model.CityId" value="1.5"onclick="ratingClick(this);" /><label class="half" for="star1half" title="Not good. 1.5 stars"></label>
+                <input type="radio" id="star1-@Model.CityId" name="rating-@Model.CityId" value="1"onclick="ratingClick(this);" /><label class="full" for="star1" title="Not good. 1 star"></label>
+            </fieldset>
+            <p>
+                <a href="#" class="btn btn-primary btn-greet" id="greet-@Model.CityId" role="button">Greet</a>
+            </p>
+        </div>
+    </div>
+</div>
+<script>
+    $("input[name='rating-@Model.CityId'][value='@Model.CityRating']").attr('checked', true);
+</script>
