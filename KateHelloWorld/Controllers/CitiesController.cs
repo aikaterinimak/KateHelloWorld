@@ -14,11 +14,17 @@ using System.Text.RegularExpressions;
 
 namespace KateHelloWorld.Controllers
 {
+    /// <summary>
+    ///  This controller handles the operations a user can perform on a selected city, such as greet it or rate it.
     public class CitiesController : ApiController
     {
         private KateHelloWorldEntities db = new KateHelloWorldEntities();
 
-        // GET to retreive all cities
+        /// <summary>
+        ///  This service gets the list of cities and their properties, including their overall rating.
+        ///  The cities are returned in a JSON array.
+        /// </summary>
+        /// <returns>Returns the list of cities and their properties.</returns>
         public IHttpActionResult GetCities()
         {
             getCitiesResponse response = new getCitiesResponse();
@@ -46,7 +52,12 @@ namespace KateHelloWorld.Controllers
             return Ok(response);
         }
 
-        // GET to find greetings for a user for a city
+        /// <summary>
+        ///  This service gets the list of greetings given by the user for a selected city.
+        /// </summary>
+        /// <param name="cityid">The Guid of the selected city.</param>
+        /// <param name="userid">The Guid of the user display name.</param>
+        /// <returns>Returns the list of greetings of the user for the selected city.</returns>
         [Route("api/cities/{cityid}/users/{userid}/greetings")]
         [HttpGet]
         public IHttpActionResult GetGreetings(string cityid, string userid)
@@ -88,8 +99,14 @@ namespace KateHelloWorld.Controllers
 
             return Ok(greetingResponse);
         }
-        
-        // POST to create a greeting for a user for a city
+
+        /// <summary>
+        ///  This service posts the greeting given by the user for a selected city.
+        /// </summary>
+        /// <param name="cityid">The Guid of the selected city.</param>
+        /// <param name="userid">The Guid of the user display name.</param>
+        /// <param name="greeting">The greeting given by the user. Must be between 5 and 100 characters and 
+        /// cannot contain special characters, such as '$'.</param>
         [Route("api/cities/{cityid}/users/{userid}/greetings")]
         [HttpPost]
         public async Task<IHttpActionResult> PostGreeting(string cityid, string userid, [FromBody]JObject greeting)
@@ -126,7 +143,7 @@ namespace KateHelloWorld.Controllers
                 return BadRequest(ErrorMessageResources.errorMngr.GetString("ErrorGreetingLength"));
             }
 
-            Regex r = new Regex("^[a-zA-Z0-9 .!?]*$");
+            Regex r = new Regex("^[a-zA-Z0-9 .!?,();:]*$");
             if (!r.IsMatch(greetingPassed))
             {
                 return BadRequest(ErrorMessageResources.errorMngr.GetString("ErrorGreetingInvalidChars"));
@@ -151,7 +168,13 @@ namespace KateHelloWorld.Controllers
             return Ok();
         }
 
-        // GET to find rating for a user for a city
+        /// <summary>
+        ///  This service gets the rating given by the user for a selected city. In its current implementation,
+        ///  there is only one rating per user.
+        /// </summary>
+        /// <param name="cityid">The Guid of the selected city.</param>
+        /// <param name="userid">The Guid of the user display name.</param>
+        /// <returns>Returns the rating of the user for the selected city.</returns>
         [Route("api/cities/{cityid}/users/{userid}/ratings")]
         [HttpGet]
         public IHttpActionResult GetRating(string cityid, string userid)
@@ -191,8 +214,13 @@ namespace KateHelloWorld.Controllers
             return Ok(ratingResponse);
         }
 
-        // POST to create a rating for a user for a city
-        // PUT to create a rating for a user for a city
+        /// <summary>
+        ///  This service posts/puts the rating given by the user for a selected city. I decided to put both verbs
+        ///  in one method for the sake of brevity in this hello world project.
+        /// </summary>
+        /// <param name="cityid">The Guid of the selected city.</param>
+        /// <param name="userid">The Guid of the user display name.</param>
+        /// <param name="rating">The rating given by the user. Must be between 1 and 5.</param>
         [Route("api/cities/{cityid}/users/{userid}/ratings")]
         [HttpPost]
         [HttpPut]

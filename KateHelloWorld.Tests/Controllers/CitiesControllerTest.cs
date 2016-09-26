@@ -48,6 +48,24 @@ namespace KateHelloWorld.Tests.Controllers
             Assert.IsNotNull(contentResult.Content.greetings);
             Assert.IsInstanceOfType(contentResult.Content, typeof(getUserGreetingsResponse));
             Assert.AreNotEqual(contentResult.Content.greetings.Count, 0);
+
+            //***Test Invalid CityGuid Request***
+            // Act
+            IHttpActionResult resultCityInvalidGuid = controller.GetGreetings("invalid", _USER_GUID);
+
+            // Assert
+            Assert.IsNotNull(resultCityInvalidGuid);
+            Assert.IsInstanceOfType(resultCityInvalidGuid, typeof(BadRequestErrorMessageResult));
+            //*************************
+
+            //***Test Invalid UserGuid Request***
+            // Act
+            IHttpActionResult resultInvalidUserGuid = controller.GetGreetings(_CITY_GUID, "invalid");
+
+            // Assert
+            Assert.IsNotNull(resultInvalidUserGuid);
+            Assert.IsInstanceOfType(resultInvalidUserGuid, typeof(BadRequestErrorMessageResult));
+            //*************************
         }
 
         [TestMethod]
@@ -67,13 +85,22 @@ namespace KateHelloWorld.Tests.Controllers
             Assert.IsInstanceOfType(result, typeof(OkResult));
             //*************************
 
-            //***Test Invalid Guid Request***
+            //***Test Invalid CityGuid Request***
             // Act
-            IHttpActionResult resultInvalidGuid = await controller.PostGreeting("invalid", _USER_GUID, greeting);
+            IHttpActionResult resultCityInvalidGuid = await controller.PostGreeting("invalid", _USER_GUID, greeting);
 
             // Assert
-            Assert.IsNotNull(resultInvalidGuid);
-            Assert.IsInstanceOfType(resultInvalidGuid, typeof(BadRequestErrorMessageResult));
+            Assert.IsNotNull(resultCityInvalidGuid);
+            Assert.IsInstanceOfType(resultCityInvalidGuid, typeof(BadRequestErrorMessageResult));
+            //*************************
+
+            //***Test Invalid UserGuid Request***
+            // Act
+            IHttpActionResult resultInvalidUserGuid = await controller.PostGreeting(_CITY_GUID, "invalid", greeting);
+
+            // Assert
+            Assert.IsNotNull(resultInvalidUserGuid);
+            Assert.IsInstanceOfType(resultInvalidUserGuid, typeof(BadRequestErrorMessageResult));
             //*************************
 
             //***Test Invalid Greeting Request***
@@ -84,6 +111,16 @@ namespace KateHelloWorld.Tests.Controllers
             // Assert
             Assert.IsNotNull(resultInvalidGreeting);
             Assert.IsInstanceOfType(resultInvalidGreeting, typeof(BadRequestErrorMessageResult));
+            //*************************
+
+            //***Test Invalid Greeting Request***
+            // Act
+            greeting["greeting"] = "sp$cia| ch@r";
+            IHttpActionResult resultInvalidCharGreeting = await controller.PostGreeting(_CITY_GUID, _USER_GUID, greeting);
+
+            // Assert
+            Assert.IsNotNull(resultInvalidCharGreeting);
+            Assert.IsInstanceOfType(resultInvalidCharGreeting, typeof(BadRequestErrorMessageResult));
             //*************************
         }
 
@@ -102,6 +139,24 @@ namespace KateHelloWorld.Tests.Controllers
             Assert.IsNotNull(contentResult.Content);
             Assert.IsNotNull(contentResult.Content.rating);
             Assert.IsInstanceOfType(contentResult.Content, typeof(getRatingForCity));
+
+            //***Test Invalid CityGuid Request***
+            // Act
+            IHttpActionResult resultCityInvalidGuid = controller.GetRating("invalid", _USER_GUID);
+
+            // Assert
+            Assert.IsNotNull(resultCityInvalidGuid);
+            Assert.IsInstanceOfType(resultCityInvalidGuid, typeof(BadRequestErrorMessageResult));
+            //*************************
+
+            //***Test Invalid UserGuid Request***
+            // Act
+            IHttpActionResult resultInvalidUserGuid = controller.GetRating(_CITY_GUID, "invalid");
+
+            // Assert
+            Assert.IsNotNull(resultInvalidUserGuid);
+            Assert.IsInstanceOfType(resultInvalidUserGuid, typeof(BadRequestErrorMessageResult));
+            //*************************
         }
 
         [TestMethod]
@@ -119,19 +174,28 @@ namespace KateHelloWorld.Tests.Controllers
             Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result, typeof(OkResult));
 
-            //***Test Invalid Guid Request***
+            //***Test Invalid City Guid Request***
             // Act
-            IHttpActionResult resultInvalidGuid = await controller.PostGreeting("invalid", _USER_GUID, rating);
+            IHttpActionResult resultInvalidCityGuid = await controller.PostRating("invalid", _USER_GUID, rating);
 
             // Assert
-            Assert.IsNotNull(resultInvalidGuid);
-            Assert.IsInstanceOfType(resultInvalidGuid, typeof(BadRequestErrorMessageResult));
+            Assert.IsNotNull(resultInvalidCityGuid);
+            Assert.IsInstanceOfType(resultInvalidCityGuid, typeof(BadRequestErrorMessageResult));
             //*************************
 
-            //***Test Invalid Greeting Request***
+            //***Test Invalid User Guid Request***
+            // Act
+            IHttpActionResult resultInvalidUserGuid = await controller.PostRating(_CITY_GUID, "invalid", rating);
+
+            // Assert
+            Assert.IsNotNull(resultInvalidUserGuid);
+            Assert.IsInstanceOfType(resultInvalidUserGuid, typeof(BadRequestErrorMessageResult));
+            //*************************
+
+            //***Test Invalid Rating Request***
             // Act
             rating["rating"] = 0;
-            IHttpActionResult resultInvalidRating = await controller.PostGreeting(_CITY_GUID, _USER_GUID, rating);
+            IHttpActionResult resultInvalidRating = await controller.PostRating(_CITY_GUID, _USER_GUID, rating);
 
             // Assert
             Assert.IsNotNull(resultInvalidRating);

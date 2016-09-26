@@ -10,12 +10,19 @@ using System.Text.RegularExpressions;
 
 namespace KateHelloWorld.Controllers
 {
+    /// <summary>
+    ///  This controller handles the obtaining and creating of user display names and their associated Guids.
+    /// </summary>
+    /// <returns>Returns the Guid of the user display name.</returns>
     public class UsersController : ApiController
     {
         private KateHelloWorldEntities db = new KateHelloWorldEntities();
-        
-        // GET Guid associated with displayname, if exists
-        //     Guid gets created if displayname does not exist
+
+        /// <summary>
+        ///  This service gets the GUID associated with a user display name. In real circumstances, OAuth would be used
+        ///  for user login, but for the sake of brevity in the Hello World App, "users" are distinguished by display names.
+        /// </summary>
+        /// <param name="displayname">The desired display name of the user</param>
         [Route("api/users/{displayname}/")]
         [HttpGet]
         [HttpPost]
